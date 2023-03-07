@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
-import pyrealsense2.pyrealsense2 as rs
+import pyrealsense2 as rs
 from sensor_msgs.msg import Image, CameraInfo
 
 
@@ -17,6 +17,7 @@ class IntelCam:
         self.img_height = int(self.user_config.height)
         self.freq = int(self.user_config.tick)
         self.serial_number = self.user_config.serial_num[0]
+        self.prefix = self.user_config.prefix
 
         if self.user_config.align:
             self.align = self.align_depth_to_color()
@@ -45,11 +46,14 @@ class IntelCam:
         color_publisher, depth_publisher, c_info_publisher = None, None, None
 
         if self.user_config.color:
-            color_publisher = rospy.Publisher("/intelcam/rgb_image", Image, queue_size=5)
+            topic_name = "/intelcam/"+self.prefix+"/rgb_image"
+            color_publisher = rospy.Publisher(topic_name, Image, queue_size=5)
         if self.user_config.depth:
-            depth_publisher = rospy.Publisher("/intelcam/depth_image", Image, queue_size=5)
+            topic_name = "/intelcam/"+self.prefix+"/depth_image"
+            depth_publisher = rospy.Publisher(topic_name, Image, queue_size=5)
 
-        c_info_publisher = rospy.Publisher("camera_info", CameraInfo, queue_size=5)
+        c_info_t_name = "/intelcam/"+self.prefix+"/camera_info"
+        c_info_publisher = rospy.Publisher(c_info_t_name, CameraInfo, queue_size=5)
 
         return c_info_publisher,color_publisher,depth_publisher
 

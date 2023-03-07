@@ -32,6 +32,7 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--depth", help="enable depth", default=True, action="store_true")
     parser.add_argument("-a", "--align", help="align rgb and depth", default=True, action="store_true")
     parser.add_argument('-sn','--serial-num', action="append", help='<Required> camera serial number', required=True)
+    parser.add_argument('-pf','--prefix', default='cam', help="Prefix for the topic")
 
     args = parser.parse_args()
 
